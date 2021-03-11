@@ -21,7 +21,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react", "react-hooks", "@typescript-eslint"],
+  plugins: ["react", "react-hooks", "@typescript-eslint", , "prettier"],
   //   plugins: ["react", "@typescript-eslint"],
   rules: {
     indent: ["error", "tab"],
@@ -32,6 +32,7 @@ module.exports = {
     "@typescript-eslint/no-empty-function": "off",
     "react/display-name": "off",
     "react/prop-types": "off",
+    "prettier/prettier": "error",
   },
   settings: {
     react: {
