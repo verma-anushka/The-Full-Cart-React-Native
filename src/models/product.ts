@@ -4,7 +4,7 @@ class Product {
   imageUrl: string;
   title: string;
   description: string;
-  price: string;
+  price: number;
 
   constructor(
     id: string,
@@ -12,7 +12,7 @@ class Product {
     title: string,
     imageUrl: string,
     description: string,
-    price: string,
+    price: number,
   ) {
     this.id = id;
     this.ownerId = ownerId;
