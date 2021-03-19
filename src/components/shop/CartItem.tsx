@@ -3,14 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity, Platform } from "react-native
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../../constants/Colors";
 
-interface Props {
+export interface CartItemProps {
   quantity: number;
   title: string;
   amount: number;
-  onRemove: () => void;
+  deletable: boolean;
+  onRemove?: () => void;
 }
 
-const CartItem = ({ quantity, title, amount, onRemove }: Props): JSX.Element => {
+const CartItem = ({ quantity, title, amount, deletable, onRemove }: CartItemProps): JSX.Element => {
   // const CartItem = (props: Props): JSX.Element => {
   return (
     <View style={styles.cartItem}>
@@ -20,14 +21,15 @@ const CartItem = ({ quantity, title, amount, onRemove }: Props): JSX.Element => 
       </View>
       <View style={styles.itemData}>
         <Text style={styles.mainText}>${amount.toFixed(2)}</Text>
-
-        <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
-          <Ionicons
-            name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
-            size={23}
-            color={COLORS.RED}
-          />
-        </TouchableOpacity>
+        {deletable && (
+          <TouchableOpacity onPress={onRemove} style={styles.deleteButton}>
+            <Ionicons
+              name={Platform.OS === "android" ? "md-trash" : "ios-trash"}
+              size={23}
+              color={COLORS.RED}
+            />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

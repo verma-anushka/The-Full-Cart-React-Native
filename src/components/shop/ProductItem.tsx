@@ -10,7 +10,7 @@ import {
   Platform,
 } from "react-native";
 
-import Colors from "../../constants/Colors";
+import COLORS from "../../constants/Colors";
 // import Product from "../../models/product";
 
 interface Props {
@@ -42,8 +42,8 @@ const ProductItem = (props: Props) => {
               <Text style={styles.price}>${props.price.toFixed(2)}</Text>
             </View>
             <View style={styles.actions}>
-              <Button color={Colors.PRIMARY} title="View Details" onPress={props.onViewDetail} />
-              <Button color={Colors.PRIMARY} title="To Cart" onPress={props.onAddToCart} />
+              <Button color={COLORS.PRIMARY} title="View Details" onPress={props.onViewDetail} />
+              <Button color={COLORS.PRIMARY} title="To Cart" onPress={props.onAddToCart} />
             </View>
           </View>
         </TouchableCmp>
@@ -54,13 +54,13 @@ const ProductItem = (props: Props) => {
 
 const styles = StyleSheet.create({
   product: {
-    shadowColor: "black",
+    shadowColor: COLORS.BLACK,
     shadowOpacity: 0.26,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     elevation: 5,
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: COLORS.WHITE,
     height: 300,
     margin: 20,
   },

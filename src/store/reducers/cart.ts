@@ -1,5 +1,5 @@
 import CartItem from "../../models/cartItem";
-import { ADD_TO_CART, CartItemInterface, REMOVE_FROM_CART } from "../actions/types";
+import { ADD_ORDER, ADD_TO_CART, CartItemInterface, REMOVE_FROM_CART } from "../actions/types";
 
 interface CardState {
   items: any;
@@ -60,6 +60,9 @@ export default (
         items: updatedCartItems,
         total: state.total - selectedItem.productPrice,
       };
+
+    case ADD_ORDER:
+      return CART_INITIAL_STATE;
 
     default:
       return state;
