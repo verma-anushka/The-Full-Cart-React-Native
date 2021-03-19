@@ -3,18 +3,19 @@ import { View, StyleSheet, FlatList, Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import Product from "../../models/product";
 import { RootState } from "../../store/reducers";
-import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
+// import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/common/HeaderButton";
 import ProductItem from "../../components/shop/ProductItem";
 import { addToCart } from "../../store/actions/cart";
+
 interface Props {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+  // navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 // const ProductOverviewScreen: React.FC<Props> = (props) => {
-const ProductOverviewScreen = (props: Props): JSX.Element => {
+const ProductOverviewScreen = (props: any): JSX.Element => {
   const products = useSelector((state: RootState) => state.products.availableProducts);
   const dispatch = useDispatch();
 
@@ -48,9 +49,20 @@ const styles = StyleSheet.create({
   container: {},
 });
 
-ProductOverviewScreen.navigationOptions = (navData: Props) => {
+ProductOverviewScreen.navigationOptions = (navData: any) => {
   return {
     headerTitle: "All Products!",
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
+          onPress={() => {
+            navData.navigation.toggleDrawer();
+          }}
+        />
+      </HeaderButtons>
+    ),
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item

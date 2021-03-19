@@ -6,12 +6,13 @@ import COLORS from "../../constants/Colors";
 import CartItem from "../../components/shop/CartItem";
 import { RootState } from "../../store/reducers";
 import { removeFromCart } from "../../store/actions/cart";
+import { addOrder } from "../../store/actions/orders";
 
 export interface Props {}
 
 const CartScreen = (props: Props): JSX.Element => {
   const totalAmount = useSelector((state: RootState) => state.cart.total);
-  const cartItems = useSelector((state: RootState) => {
+  const cartItems: any = useSelector((state: RootState) => {
     const transformedCartItems = [];
 
     for (const key in state.cart.items) {
@@ -39,7 +40,9 @@ const CartScreen = (props: Props): JSX.Element => {
           title="Order Now"
           color={COLORS.SECONDARY}
           disabled={cartItems.length === 0}
-          onPress={() => {}}
+          onPress={() => {
+            dispatch(addOrder(cartItems, totalAmount));
+          }}
         />
       </View>
 
@@ -87,5 +90,11 @@ const styles = StyleSheet.create({
     color: COLORS.PRIMARY,
   },
 });
+
+CartScreen.navigationOptions = () => {
+  return {
+    headerTitle: "Your Cart",
+  };
+};
 
 export default CartScreen;
