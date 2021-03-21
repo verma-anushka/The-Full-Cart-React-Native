@@ -1,5 +1,11 @@
 import CartItem from "../../models/cartItem";
-import { ADD_ORDER, ADD_TO_CART, CartItemInterface, REMOVE_FROM_CART } from "../actions/types";
+import {
+  ADD_ORDER,
+  ADD_TO_CART,
+  CartItemInterface,
+  DELETE_PRODUCT,
+  REMOVE_FROM_CART,
+} from "../actions/types";
 
 interface CardState {
   items: any;
@@ -63,6 +69,20 @@ export default (
 
     case ADD_ORDER:
       return CART_INITIAL_STATE;
+
+    case DELETE_PRODUCT:
+      if (!state.items[payload]) {
+        return state;
+      }
+
+      const updatedItems = { ...state.items };
+      const itemPrice = state.items[payload].sum;
+      delete updatedItems[payload];
+      return {
+        ...state,
+        items: updatedItems,
+        total: state.total - itemPrice,
+      };
 
     default:
       return state;

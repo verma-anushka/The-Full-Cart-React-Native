@@ -1,4 +1,6 @@
 import PRODUCTS from "../../data/dummy";
+import Product from "../../models/product";
+import { DELETE_PRODUCT } from "../actions/types";
 
 const PRODUCTS_INITIAL_STATE = {
   availableProducts: PRODUCTS, // list of all products
@@ -10,6 +12,15 @@ export default (
   { type, payload }: { type: string; payload: any },
 ) => {
   switch (type) {
+    case DELETE_PRODUCT:
+      return {
+        ...state,
+        availableProducts: state.availableProducts.filter(
+          (product: Product) => product.id !== payload,
+        ),
+        userProducts: state.userProducts.filter((product: Product) => product.id !== payload),
+      };
+
     default:
       return state;
   }
