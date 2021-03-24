@@ -25,7 +25,16 @@ const UserProductsScreen = (props: Props): JSX.Element => {
   };
 
   const deleteHandler = (id: string) => {
-    dispatch(deleteProduct(id));
+    Alert.alert("Are you sure?", "Do you really want to delete this item?", [
+      { text: "No", style: "default" },
+      {
+        text: "Yes",
+        style: "destructive",
+        onPress: () => {
+          dispatch(deleteProduct(id));
+        },
+      },
+    ]);
   };
 
   return (
@@ -50,7 +59,7 @@ const UserProductsScreen = (props: Props): JSX.Element => {
           <Button
             color={COLORS.PRIMARY}
             title="Delete"
-            onPress={deleteHandler.bind(this, itemData.item.id)}
+            onPress={() => deleteHandler(itemData.item.id)}
           />
         </ProductItem>
       )}
