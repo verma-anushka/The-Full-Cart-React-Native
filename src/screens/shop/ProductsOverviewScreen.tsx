@@ -27,23 +27,28 @@ interface Props {
 // const ProductOverviewScreen: React.FC<Props> = (props) => {
 const ProductOverviewScreen = (props: any): JSX.Element => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   const [error, setError] = useState("");
   const products = useSelector((state: RootState) => state.products.availableProducts);
   const dispatch = useDispatch();
 
   const loadProducts = useCallback(async () => {
     setError("");
-    setIsLoading(true);
+    setIsRefreshing(true);
     try {
       await dispatch(getProducts());
     } catch (err) {
       setError(err.message);
     }
-    setIsLoading(false);
-  }, [dispatch, setIsLoading, setError]);
+    setIsRefreshing(false);
+  }, [dispatch, setIsRefreshing, setError]);
 
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
   }, [loadProducts]);
 
   // drawer navigation stores screens in memory,
@@ -93,6 +98,8 @@ const ProductOverviewScreen = (props: any): JSX.Element => {
 
   return (
     <FlatList
+      onRefresh={loadProducts} // pull to refresh
+      refreshing={isRefreshing}
       data={products}
       keyExtractor={(item: Product) => item.id}
       renderItem={(itemData: any) => (
