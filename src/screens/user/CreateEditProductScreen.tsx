@@ -1,5 +1,15 @@
-import React, { useEffect, useCallback, useReducer } from "react";
-import { View, ScrollView, KeyboardAvoidingView, StyleSheet, Platform, Alert } from "react-native";
+import React, { useState, useEffect, useCallback, useReducer } from "react";
+import {
+  View,
+  Text,
+  Button,
+  ScrollView,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Platform,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useSelector, useDispatch } from "react-redux";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
@@ -8,6 +18,7 @@ import HeaderButton from "../../components/common/HeaderButton";
 import { editProduct, createProduct } from "../../store/actions/products";
 import { RootState } from "../../store/reducers";
 import Input from "../../components/common/Input";
+import COLORS from "../../constants/Colors";
 
 export interface Props {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -39,9 +50,12 @@ const formReducer = (state: any, action: any) => {
 };
 
 const CreateEditProductScreen = (props: Props): JSX.Element => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const prodId = props.navigation.getParam("productId");
   const editedProduct = useSelector((state: RootState) =>
-    state.products.userProducts.find((product) => product.id === prodId),
+    state.products.userProducts.find((product: any) => product.id === prodId),
   );
   const dispatch = useDispatch();
 
@@ -61,31 +75,47 @@ const CreateEditProductScreen = (props: Props): JSX.Element => {
     formIsValid: editedProduct ? true : false,
   });
 
-  const submitHandler = useCallback(() => {
+  useEffect(() => {
+    if (error !== "") {
+      Alert.alert("Something went wrong!", error, [{ text: "Okay!" }]);
+    }
+  }, [error]);
+
+  const submitHandler = useCallback(async () => {
     if (!formState.formIsValid) {
       Alert.alert("Wrong input!", "Please check the errors in the form.", [{ text: "Okay" }]);
       return;
     }
-    if (editedProduct) {
-      dispatch(
-        editProduct(
-          prodId,
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl,
-        ),
-      );
-    } else {
-      dispatch(
-        createProduct(
-          formState.inputValues.title,
-          formState.inputValues.description,
-          formState.inputValues.imageUrl,
-          +formState.inputValues.price,
-        ),
-      );
+
+    setIsLoading(true);
+    setError("");
+
+    try {
+      if (editedProduct) {
+        await dispatch(
+          editProduct(
+            prodId,
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl,
+          ),
+        );
+      } else {
+        dispatch(
+          await createProduct(
+            formState.inputValues.title,
+            formState.inputValues.description,
+            formState.inputValues.imageUrl,
+            +formState.inputValues.price,
+          ),
+        );
+      }
+      props.navigation.goBack();
+    } catch (err) {
+      setError(err.message);
     }
-    props.navigation.goBack();
+
+    setIsLoading(false);
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
@@ -103,6 +133,14 @@ const CreateEditProductScreen = (props: Props): JSX.Element => {
     },
     [dispatchFormState],
   );
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={COLORS.PRIMARY} />
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={10}>
@@ -185,6 +223,7 @@ const styles = StyleSheet.create({
   form: {
     margin: 20,
   },
+  centered: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
 
 export default CreateEditProductScreen;

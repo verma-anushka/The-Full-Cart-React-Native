@@ -1,6 +1,6 @@
 import PRODUCTS from "../../data/dummy";
 import Product from "../../models/product";
-import { DELETE_PRODUCT, CREATE_PRODUCT, EDIT_PRODUCT } from "../actions/types";
+import { DELETE_PRODUCT, CREATE_PRODUCT, EDIT_PRODUCT, GET_PRODUCTS } from "../actions/types";
 
 const PRODUCTS_INITIAL_STATE = {
   availableProducts: PRODUCTS, // list of all products
@@ -12,6 +12,12 @@ export default (
   { type, payload }: { type: string; payload: any },
 ) => {
   switch (type) {
+    case GET_PRODUCTS:
+      return {
+        availableProducts: payload,
+        userProducts: payload.filter((product: { ownerId: string }) => product.ownerId === "u1"),
+      };
+
     case DELETE_PRODUCT:
       return {
         ...state,
@@ -23,7 +29,7 @@ export default (
 
     case CREATE_PRODUCT:
       const newProduct = new Product(
-        new Date().toString(),
+        payload.id,
         "u1",
         payload.title,
         payload.imageUrl,

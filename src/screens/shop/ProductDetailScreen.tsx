@@ -12,7 +12,7 @@ interface Props {
 const ProductDetailScreen = (props: Props): JSX.Element => {
   const productId = props.navigation.getParam("productId");
   const selectedProduct = useSelector((state: RootState) =>
-    state.products.availableProducts.find((product) => product.id === productId),
+    state.products.availableProducts.find((product: any) => product.id === productId),
   );
   const dispatch = useDispatch();
 
