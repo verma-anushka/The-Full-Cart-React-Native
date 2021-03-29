@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Alert, Button, StyleSheet, ActivityIndicator } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useSelector, useDispatch } from "react-redux";
 import COLORS from "../../constants/Colors";
@@ -12,6 +12,9 @@ import Card from "../../components/common/Card";
 export interface Props {}
 
 const CartScreen = (props: Props): JSX.Element => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const totalAmount = useSelector((state: RootState) => state.cart.total);
   const cartItems: any = useSelector((state: RootState) => {
     const transformedCartItems = [];
@@ -30,6 +33,22 @@ const CartScreen = (props: Props): JSX.Element => {
     return transformedCartItems.sort((a, b) => (a.productId > b.productId ? 1 : -1));
   });
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (error !== "") {
+      Alert.alert("Something went wrong!", error, [{ text: "Okay!" }]);
+    }
+  }, [error]);
+
+  const sendOrderHandler = async () => {
+    setError("");
+    setIsLoading(true);
+    try {
+      await dispatch(addOrder(cartItems, totalAmount));
+    } catch (err) {
+      setError(err.message);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <View style={styles.screen}>
@@ -38,14 +57,16 @@ const CartScreen = (props: Props): JSX.Element => {
           Total:{" "}
           <Text style={styles.amount}>${Math.round(totalAmount.toFixed(2) * 100) / 100}</Text>
         </Text>
-        <Button
-          title="Order Now"
-          color={COLORS.SECONDARY}
-          disabled={cartItems.length === 0}
-          onPress={() => {
-            dispatch(addOrder(cartItems, totalAmount));
-          }}
-        />
+        {isLoading ? (
+          <ActivityIndicator size="small" color={COLORS.PRIMARY} />
+        ) : (
+          <Button
+            title="Order Now"
+            color={COLORS.SECONDARY}
+            disabled={cartItems.length === 0}
+            onPress={sendOrderHandler}
+          />
+        )}
       </Card>
 
       <FlatList
