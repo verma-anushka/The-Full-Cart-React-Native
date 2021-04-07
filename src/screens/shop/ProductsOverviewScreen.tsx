@@ -26,8 +26,8 @@ interface Props {
 
 // const ProductOverviewScreen: React.FC<Props> = (props) => {
 const ProductOverviewScreen = (props: any): JSX.Element => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const [error, setError] = useState("");
   const products = useSelector((state: RootState) => state.products.availableProducts);

@@ -17,18 +17,19 @@ import HeaderButton from "../../components/common/HeaderButton";
 import OrderItem from "../../components/shop/OrderItem";
 import { getOrders } from "../../store/actions/orders";
 import COLORS from "../../constants/Colors";
+import { OrdersInterface } from "../../store/actions/types";
 
 interface Props {
-  // navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 const OrdersScreen = (props: Props): JSX.Element => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
-  const orders = useSelector((state: RootState) => state.orders.orders);
+  const orders: OrdersInterface[] = useSelector((state: RootState) => state.orders.orders);
 
-  const dispatch = useDispatch();
+  const dispatch: any = useDispatch();
 
   const loadOrders = useCallback(async () => {
     setError("");
@@ -66,6 +67,14 @@ const OrdersScreen = (props: Props): JSX.Element => {
     return (
       <View style={styles.centered}>
         <Text>No orders found!</Text>
+      </View>
+    );
+  }
+
+  if (orders.length === 0) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>No orders found!!</Text>
       </View>
     );
   }

@@ -12,10 +12,10 @@ import Card from "../../components/common/Card";
 export interface Props {}
 
 const CartScreen = (props: Props): JSX.Element => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
-  const totalAmount = useSelector((state: RootState) => state.cart.total);
+  const totalAmount: number = useSelector((state: RootState) => state.cart.total);
   const cartItems: any = useSelector((state: RootState) => {
     const transformedCartItems = [];
 
@@ -32,6 +32,7 @@ const CartScreen = (props: Props): JSX.Element => {
     // console.log(transformedCartItems);
     return transformedCartItems.sort((a, b) => (a.productId > b.productId ? 1 : -1));
   });
+
   const dispatch = useDispatch();
   useEffect(() => {
     if (error !== "") {
@@ -55,7 +56,7 @@ const CartScreen = (props: Props): JSX.Element => {
       <Card style={styles.summary}>
         <Text style={styles.summaryText}>
           Total:{" "}
-          <Text style={styles.amount}>${Math.round(totalAmount.toFixed(2) * 100) / 100}</Text>
+          <Text style={styles.amount}>${Math.round(+totalAmount.toFixed(2) * 100) / 100}</Text>
         </Text>
         {isLoading ? (
           <ActivityIndicator size="small" color={COLORS.PRIMARY} />
