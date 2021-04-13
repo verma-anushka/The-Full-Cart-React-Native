@@ -2,10 +2,12 @@ import Order from "../../models/order";
 import { ADD_ORDER, GET_ORDERS, ProductInterface } from "./types";
 
 export const getOrders = () => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
     try {
+      const userId = getState().auth.userId;
+
       const res = await fetch(
-        "https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json",
+        `https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${userId}.json`,
       );
 
       if (!res.ok) {
@@ -30,10 +32,12 @@ export const getOrders = () => {
 };
 
 export const addOrder = (cartItems: ProductInterface, totalAmount: number) => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const date = new Date();
     const res = await fetch(
-      "https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/orders/u1.json",
+      `https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/orders/${userId}.json?auth=${token}`,
       {
         method: "POST",
         headers: {

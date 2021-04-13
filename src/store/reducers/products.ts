@@ -4,7 +4,7 @@ import { DELETE_PRODUCT, CREATE_PRODUCT, EDIT_PRODUCT, GET_PRODUCTS } from "../a
 
 const PRODUCTS_INITIAL_STATE = {
   availableProducts: PRODUCTS, // list of all products
-  userProducts: PRODUCTS.filter((product) => product.ownerId === "u1"), // list of logged in user's created products
+  userProducts: PRODUCTS, // list of logged in user's created products
 };
 
 export default (
@@ -14,8 +14,8 @@ export default (
   switch (type) {
     case GET_PRODUCTS:
       return {
-        availableProducts: payload,
-        userProducts: payload.filter((product: { ownerId: string }) => product.ownerId === "u1"),
+        availableProducts: payload.products,
+        userProducts: payload.userProducts,
       };
 
     case DELETE_PRODUCT:
@@ -30,7 +30,7 @@ export default (
     case CREATE_PRODUCT:
       const newProduct = new Product(
         payload.id,
-        "u1",
+        payload.ownerId,
         payload.title,
         payload.imageUrl,
         payload.description,

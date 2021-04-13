@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import { NavigationParams, NavigationScreenProp, NavigationState } from "react-navigation";
 
-// import { RootState } from "../../store/reducers";
+import { RootState } from "../../store/reducers";
 
 import Input from "../../components/common/Input";
 import Card from "../../components/common/Card";

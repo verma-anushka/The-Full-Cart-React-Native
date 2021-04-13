@@ -1,9 +1,16 @@
-import { DELETE_PRODUCT, CREATE_PRODUCT, EDIT_PRODUCT, GET_PRODUCTS } from "./types";
+import {
+  DELETE_PRODUCT,
+  CREATE_PRODUCT,
+  EDIT_PRODUCT,
+  GET_PRODUCTS,
+  ProductInterface,
+} from "./types";
 import Product from "../../models/product";
 
 export const getProducts = () => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
     try {
+      const userId = getState().auth.userId;
       const res = await fetch(
         "https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/products.json",
       );
@@ -12,13 +19,13 @@ export const getProducts = () => {
         throw new Error("Something went wrong");
       }
       const data = await res.json();
-      const products = [];
+      const products: ProductInterface[] = [];
 
       for (const key in data) {
         products.push(
           new Product(
             key,
-            "u1",
+            data[key].ownerId,
             data[key].title,
             data[key].imageUrl,
             data[key].description,
@@ -28,7 +35,7 @@ export const getProducts = () => {
       }
       dispatch({
         type: GET_PRODUCTS,
-        payload: products,
+        payload: { products, userProducts: products.filter((prod) => prod.ownerId === userId) },
       });
     } catch (err) {
       throw err;
@@ -37,10 +44,12 @@ export const getProducts = () => {
 };
 
 export const deleteProduct = (productId: string) => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
     try {
+      const token = getState().auth.token;
+
       const res = await fetch(
-        `https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`,
+        `https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json?auth=${token}`,
         {
           method: "DELETE",
         },
@@ -66,9 +75,12 @@ export const createProduct = (
   imageUrl: string,
   price: number,
 ) => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
+
     const res = await fetch(
-      "https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/products.json",
+      `https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=${token}`,
       {
         method: "POST",
         headers: {
@@ -79,6 +91,7 @@ export const createProduct = (
           description,
           imageUrl,
           price,
+          ownerId: userId,
         }),
       },
     );
@@ -90,7 +103,7 @@ export const createProduct = (
     const data = await res.json();
     dispatch({
       type: CREATE_PRODUCT,
-      payload: { id: data.name, title, description, imageUrl, price },
+      payload: { id: data.name, title, description, imageUrl, price, ownerId: userId },
     });
   };
 };
@@ -101,10 +114,11 @@ export const editProduct = (
   description: string,
   imageUrl: string,
 ) => {
-  return async (dispatch: any) => {
+  return async (dispatch: any, getState: any) => {
     try {
+      const token = getState().auth.token;
       const res = await fetch(
-        `https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json`,
+        `https://the-full-cart-react-native-default-rtdb.asia-southeast1.firebasedatabase.app/products/${productId}.json?auth=${token}`,
         {
           method: "PATCH",
           headers: {
