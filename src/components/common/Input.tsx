@@ -41,6 +41,8 @@ interface Props {
   min?: number;
   max?: number;
   minLength?: number;
+  email?: any;
+  secureTextEntry?: any;
   onInputChange: any;
 }
 
@@ -59,8 +61,13 @@ const Input = (props: Props): JSX.Element => {
   }, [inputState, onInputChange, id]);
 
   const textChangeHandler = (text: string) => {
+    const emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let isValid = true;
     if (props.required && text.trim().length === 0) {
+      isValid = false;
+    }
+    if (props.email && !emailRegex.test(text.toLowerCase())) {
       isValid = false;
     }
     if (props.min != null && +text < props.min) {

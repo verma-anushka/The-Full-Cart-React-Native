@@ -114,24 +114,22 @@ const AuthScreen = (props: Props): JSX.Element => {
               label="E-Mail"
               keyboardType="email-address"
               required
-              //   email
+              email
               autoCapitalize="none"
               errorText="Please enter a valid email address."
-              //   onInputChange={inputChangeHandler}
-              onInputChange={() => {}}
+              onInputChange={inputChangeHandler}
               initialValue=""
             />
             <Input
               id="password"
               label="Password"
               keyboardType="default"
-              //   secureTextEntry
+              secureTextEntry
               required
               minLength={5}
               autoCapitalize="none"
               errorText="Please enter a valid password."
-              //   onInputChange={inputChangeHandler}
-              onInputChange={() => {}}
+              onInputChange={inputChangeHandler}
               initialValue=""
             />
             <View style={styles.buttonContainer}>

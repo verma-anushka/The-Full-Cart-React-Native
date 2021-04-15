@@ -8,7 +8,8 @@ import AppLoading from "expo-app-loading";
 // import * as Font from "expo-font";
 import { useFonts } from "expo-font";
 
-import Navigator from "./navigation";
+// import Navigator from "./navigation";
+import NavigationContainer from "./navigation/NavigationContainer";
 
 // const fetchFonts = () => {
 //   return Font.loadAsync({
@@ -40,7 +41,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <Navigator />
+      <NavigationContainer />
     </Provider>
   );
 }
