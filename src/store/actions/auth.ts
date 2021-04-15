@@ -1,4 +1,4 @@
-import { AUTHENTICATE } from "./types";
+import { AUTHENTICATE, LOGOUT } from "./types";
 import AsyncStorage from "@react-native-community/async-storage";
 
 export const authenticate = (userId: string, token: string, expiryTime: number) => {
@@ -77,6 +77,11 @@ export const login = (email: string, password: string) => {
     const expirationDate = new Date(new Date().getTime() + parseInt(data.expiresIn) * 1000);
     saveDataToStorage(data.idToken, data.localId, expirationDate);
   };
+};
+
+export const logout = () => {
+  AsyncStorage.removeItem("userData");
+  return { type: LOGOUT };
 };
 
 const saveDataToStorage = (token: string, userId: string, expirationDate: any) => {
